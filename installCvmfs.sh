@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Running container as a system service"
+
 #Create a script that installs and test the installation of cvmfs
 echo 'Starting cvmfs installation'
 
@@ -28,15 +30,14 @@ docker pull registry.cern.ch/cvmfs/service:latest
 echo "Done with docker-pull command"
 
 
-echo "Run container as a system service"
-
-docker run -d --rm \
-  -e CVMFS_CLIENT_PROFILE=single \
-  -e CVMFS_REPOSITORIES=sft.cern.ch,... \
-  --cap-add SYS_ADMIN \
-  --device /dev/fuse \
-  --volume /cvmfs:/cvmfs:shared \
-  cvmfs/service:2.12.0-1
+#echo "Running container as a system service"
+# docker run -d --rm \
+#   -e CVMFS_CLIENT_PROFILE=single \
+#   -e CVMFS_REPOSITORIES=sft.cern.ch,... \
+#   --cap-add SYS_ADMIN \
+#   --device /dev/fuse \
+#   --volume /cvmfs:/cvmfs:shared \
+#   cvmfs/service:latest
 
 
 #Getting cvmfs from docker container - Method 2

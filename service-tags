@@ -1,0 +1,26 @@
+NAME                                  DESCRIPTION                                     STARS     OFFICIAL
+atlas/atlas_external_cvmfs            ATLAS SLC6 OS for external CVMF                 3         
+opensciencegrid/cvmfs-nodeplugin      A container with CVMFS daemons embedded         0         
+rancher/lb-service-haproxy                                                            8         
+purestorage/ccm-service                                                               0         
+zabbix/zabbix-web-service             Zabbix web servce for performing various tas…   7         
+rancher/lb-service-rancher                                                            0         
+docker/desktop-docker-debug-service                                                   0         
+rancher/opni-drain-service                                                            1         
+bitnami/harbor-jobservice             Bitnami container image for Harbor Job servi…   1         
+objectscale/ecs-service-broker                                                        1         
+docker/devenv-vm-service                                                              0         
+sslhep/servicex_app                                                                   0         
+cbioportal/session-service                                                            0         
+circleci/vm-service-lite              This image is for internal use                  0         
+hashicorp/counting-service            A demo service that counts each time it is a…   2         
+objectscale/blob-service                                                              0         
+atlassian/jira-servicedesk            This repo is deprecated! It is now Jira Serv…   43        
+docker/scout-demo-service                                                             0         
+pactfoundation/pact-mock-service      Docker image running the Pact mock service      1         
+hashicorp/dashboard-service           Demo service for a class on HashiCorp Consul…   4         
+objectscale/event-service                                                             0         
+rancher/rke-service-sidekick                                                          0         
+fbarreir/cvmfs-prp                                                                    0         
+sslhep/servicex-did-finder            For a given RUCIO DID and client site finds …   0         
+rancher/go-machine-service                                                            0         

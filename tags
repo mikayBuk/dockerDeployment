@@ -1,0 +1,26 @@
+NAME                               DESCRIPTION                                 STARS     OFFICIAL
+dodasts/cvmfs                                                                  0         
+alexanderrichards/cvmfs            Simple CVMFS mounting                       0         
+cloudpg/cvmfs                                                                  0         
+ozapatam/cvmfs                     cvmfs with cms enabled                      0         
+alahiff/cvmfs                                                                  0         
+ponyisi/cvmfs                                                                  0         
+cepc/cvmfs                                                                     0         
+dciangot/cvmfs                                                                 0         
+jeffersonlab/cvmfs                                                             0         
+tzuhanchang/cvmfs                                                              0         
+cmscaltech/cvmfs                                                               0         
+rklasen/cvmfs                                                                  0         
+hepcce/cvmfs                                                                   0         
+wmoore28/cvmfs                                                                 0         
+karimali3/cvmfs                                                                0         
+scanon/cvmfs                                                                   0         
+spawnxx/cvmfs                                                                  0         
+opensciencegrid/cvmfs-nodeplugin   A container with CVMFS daemons embedded     0         
+atlas/atlas_external_cvmfs         ATLAS SLC6 OS for external CVMF             3         
+sfiligoi/prp-osg-cvmfs             CVMFS related files used by OSG for PRP     0         
+hepsw/cvmfs-cms                    CMSSW served by CVMFs                       0         
+fbarreir/cvmfs-prp                                                             0         
+aperloff/cms-cvmfs-docker          A docker image which has access to CVMFS.   0         
+lyonfnal/devenv_cvmfs              devenv with CVMFS mounted                   0         
+pnnlhep/osg-cvmfs                  OSG CVMFS                                   0         
