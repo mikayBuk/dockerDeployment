@@ -21,15 +21,16 @@ sudo apt-get -y install cvmfs
 
 
 #Basic Setup
-echo "Setting up CVMFS - Basic *HERE*"
+echo "*****Setting up CVMFS - Basic*****"
 # check_kernel()
 KERNEL=$(uname -r)
 echo "Kernel: $KERNEL"
 
 
-echo "Checking errors in /etc/fstab"
+echo "Checking errors in /etc/fstab" #is not configured
 cat /etc/fstab
 
+#STOPS WORKING HERE
 sudo cvmfs_config setup
 
 
@@ -43,4 +44,4 @@ echo "Verifying setup was successful"
 sudo cvmfs_config probe
 
 #Finished with cvmfs installation
-echo 'Finished cvmfs installation'
+echo '****Finished cvmfs installation*****'
