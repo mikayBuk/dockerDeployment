@@ -8,4 +8,4 @@ There are two bash scripts: installCvmfs.sh and installDocker.sh.
 installCvmfs.sh installs cvmfs in the docker container. It obtains the pre-reqs (wget, sudo) before 
 setting up cvmfs. Follows the instructions on the page for debuntu setups (https://cvmfs.readthedocs.io/en/stable/cpt-quickstart.html).
 
-installDocker.sh installs docker in the containder. (Not yet implemented.)
+installDocker.sh installs docker in the containder. Follows the instructions on the page for debuntu setups (https://docs.docker.com/engine/install/ubuntu/#uninstall-old-versions).
