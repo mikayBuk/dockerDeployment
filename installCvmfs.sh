@@ -5,8 +5,9 @@ echo "Installing with wget method"
 #Create a script that installs and test the installation of cvmfs
 echo 'Starting cvmfs installation'
 
-#Getting dependencies 
-sudo apt-get install -y autofs
+#Getting dependencies
+sudo apt-get install linux-headers-$(uname -r)
+sudo apt-get install -y autofs fuse
 
 
 # Bypass policy-rc.d restrictions
@@ -46,55 +47,22 @@ sudo systemctl daemon-reload
 
 # Enable and start the autofs service
 sudo systemctl enable autofs
-sudo systemctl start 
-
-#Getting cvmfs from docker container - Method 1
-# echo "Starting with docker-pull command"
-# docker pull registry.cern.ch/cvmfs/service:latest
-# echo "Done with docker-pull command"
-
-
-#echo "Running container as a system service"
-# docker run -d --rm \
-#   -e CVMFS_CLIENT_PROFILE=single \
-#   -e CVMFS_REPOSITORIES=sft.cern.ch,... \
-#   --cap-add SYS_ADMIN \
-#   --device /dev/fuse \
-#   --volume /cvmfs:/cvmfs:shared \
-#   registry.cern.ch/cvmfs/service:latest
-
-
-#Getting cvmfs from docker container - Method 2
-# echo "Starting with curl command"
-# curl https://ecsft.cern.ch/dist/cvmfs/cvmfs-2.12.0/cvmfs-service-2.12.0.x86_64.docker.tar.gz | docker load
-# echo "Done with curl command"
-
-
-
-
-#Basic Setup
-# echo "*****Setting up CVMFS - Basic*****"
-# # check_kernel()
-# KERNEL=$(uname -r)
-# echo "Kernel: $KERNEL"
-
-
-# Enable and start the autofs service
-sudo systemctl enable autofs
 sudo systemctl start autofs
 
 # Install and load FUSE
-sudo apt-get install -y fuse
+sudo apt-get install --reinstall -y fuse
+ls /lib/modules/$(uname -r)/kernel/fs/fuse/
 sudo modprobe fuse
 
 # Add cvmfs user to fuse group and set permissions
+sudo groupadd fuse
 sudo usermod -aG fuse cvmfs
-sudo chown root:fuse /dev/fuse
-sudo chmod 0660 /dev/fuse
 
-# Verify /dev/fuse device
 if [ ! -e /dev/fuse ]; then
   sudo mknod /dev/fuse -m 0666 c 10 229
+else
+  sudo chown root:fuse /dev/fuse
+  sudo chmod 0660 /dev/fuse
 fi
 
 #STOPS WORKING HERE
