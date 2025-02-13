@@ -31,13 +31,13 @@ echo "Done with docker-pull command"
 
 
 #echo "Running container as a system service"
-docker run -d --rm \
-  -e CVMFS_CLIENT_PROFILE=single \
-  -e CVMFS_REPOSITORIES=sft.cern.ch,... \
-  --cap-add SYS_ADMIN \
-  --device /dev/fuse \
-  --volume /cvmfs:/cvmfs:shared \
-  registry.cern.ch/cvmfs/service:latest
+# docker run -d --rm \
+#   -e CVMFS_CLIENT_PROFILE=single \
+#   -e CVMFS_REPOSITORIES=sft.cern.ch,... \
+#   --cap-add SYS_ADMIN \
+#   --device /dev/fuse \
+#   --volume /cvmfs:/cvmfs:shared \
+#   registry.cern.ch/cvmfs/service:latest
 
 
 #Getting cvmfs from docker container - Method 2
@@ -77,13 +77,13 @@ docker ps
 #sleep 5
 
 # Verify the container is running
-if [ "$(docker ps -q -f id=$container_id)" ]; then
-  echo "Container is running. Verifying setup..."
-  docker exec -it $container_id /bin/bash -c "cvmfs_config probe"
-  echo "End of verifying setup"
-else
-  echo "Container failed to start."
-fi
+# if [ "$(docker ps -q -f id=$container_id)" ]; then
+#   echo "Container is running. Verifying setup..."
+#   docker exec -it $container_id /bin/bash -c "cvmfs_config probe"
+#   echo "End of verifying setup"
+# else
+#   echo "Container failed to start."
+# fi
 
 #Finished with cvmfs installation
 echo '****Finished cvmfs installation*****'
