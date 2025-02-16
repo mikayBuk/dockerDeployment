@@ -5,9 +5,7 @@ RUN apt-get update && apt-get install -y \
     sudo\
     bash \
     curl  \
-    docker.io \ 
     wget \
-    fuse \
     systemctl
 
 

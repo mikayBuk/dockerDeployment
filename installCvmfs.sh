@@ -6,7 +6,7 @@ echo "Installing with wget method"
 echo 'Starting cvmfs installation'
 
 #Getting dependencies
-sudo apt-get install linux-headers-$(uname -r)
+sudo apt-get install -y linux-headers-$(uname -r)
 sudo apt-get install -y autofs fuse
 
 
@@ -50,9 +50,10 @@ sudo systemctl enable autofs
 sudo systemctl start autofs
 
 # Install and load FUSE
-sudo apt-get install --reinstall -y fuse
-ls /lib/modules/$(uname -r)/kernel/fs/fuse/
+echo "***********Installing/Using Fuse***********"
+#sudo apt-get install -y fuse
 sudo modprobe fuse
+lsmod | grep fuse
 
 # Add cvmfs user to fuse group and set permissions
 sudo groupadd fuse
@@ -60,24 +61,32 @@ sudo usermod -aG fuse cvmfs
 
 if [ ! -e /dev/fuse ]; then
   sudo mknod /dev/fuse -m 0666 c 10 229
+  echo "Creating file for everyone"
 else
   sudo chown root:fuse /dev/fuse
   sudo chmod 0660 /dev/fuse
+  echo "Transfering permission to owner only"
 fi
 
-#STOPS WORKING HERE
-echo "Basic Setup Required for wget setup"
-printf "12\n4\n" | sudo cvmfs_config setup
+ls -l /dev/fuse
 
+
+echo "***********Basic Setup Required for wget setup***********"
 #Create a file that contains the repos, and other env variables
 FILENAME="/etc/cvmfs/default.local"
 TEXT="CVMFS_REPOSITORIES=atlas.cern.ch,atlas-condb.cern.ch,grid.cern.ch
 CVMFS_HTTP_PROXY=DIRECT
 CVMFS_CLIENT_PROFILE=single"
-echo "$TEXT" > $FILENAME
+if [ ! -f $FILENAME ]; then
+  echo $TEXT | sudo tee $FILENAME
+fi
+
+cat $FILENAME
+
+echo "12\n4\n" | sudo cvmfs_config setup
 
 #Restarting autofs 
-echo "Restarting autofs"
+echo "***********Restarting autofs***********"
 sudo pkill autofs
 sudo systemctl restart autofs
 
@@ -86,7 +95,7 @@ sudo systemctl status autofs
 
 
 #Verify if the setup was successful
-echo "Verifying if setup was successful"
+echo "***********Verifying if setup was successful***********"
 sudo cvmfs_config probe
 
 # Capture the exit status of the probe command
@@ -97,6 +106,8 @@ else
   echo "cvmfs_config probe succeeded"
 fi
 echo "Verification process complete"
+
+
 
 
 sudo cvmfs_config chksetup
