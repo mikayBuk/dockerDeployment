@@ -10,7 +10,7 @@ setting up cvmfs. Follows the instructions on the page for debuntu setups (https
 It installs cvmfs using the wget method. Right now, fuse is not working. Need to determine why.
 /dev/fuse not being read
 CVMFS_HTTP_PROXY var not being read in default file
-Some repos working, others need the proxy env
+cvmfs group and fuse rules. user not having read and write accesses
 
 Getting docker to run cvmfs right now. Using the docker pull method. Right now, creates two docker containers, one nested in another. The nested containder contains the cvmfs tool. having trouble accessing the nested container, since the container exits after creation. 
 

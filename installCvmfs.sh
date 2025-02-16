@@ -6,6 +6,8 @@ echo "Installing with wget method"
 echo 'Starting cvmfs installation'
 
 #Getting dependencies
+# sudo apt-get install -y systemd 
+sudo reboot #System needs to reboot after getting this
 sudo apt-get install -y linux-headers-$(uname -r)
 sudo apt-get install -y autofs fuse
 
@@ -55,30 +57,74 @@ echo "***********Installing/Using Fuse***********"
 sudo modprobe fuse
 lsmod | grep fuse
 
-# Add cvmfs user to fuse group and set permissions
-sudo groupadd fuse
-sudo usermod -aG fuse cvmfs
-
-if [ ! -e /dev/fuse ]; then
-  sudo mknod /dev/fuse -m 0666 c 10 229
-  echo "Creating file for everyone"
+# Check to make sure cvmfs user exists
+if id "cvmfs" &>/dev/null; then
+    echo "User cvmfs exists."
 else
-  sudo chown root:fuse /dev/fuse
-  sudo chmod 0660 /dev/fuse
-  echo "Transfering permission to owner only"
+    echo "Creating user cvmfs."
+    sudo useradd -m -s /bin/bash cvmfs
 fi
 
+# Create the fuse group if it does not exist
+if getent group fuse; then
+    echo "Group fuse exists."
+else
+    echo "Creating group fuse."
+    sudo groupadd fuse
+fi
+
+# Add cvmfs user to fuse group
+echo "Adding cvmfs user to fuse group."
+sudo usermod -aG fuse cvmfs
+
+# Ensure the /dev/fuse device exists
+if [ ! -e /dev/fuse ]; then
+    echo "/dev/fuse does not exist. Creating it."
+    sudo mknod /dev/fuse -m 0666 c 10 229
+else
+    echo "/dev/fuse exists."
+fi
+
+# Change ownership and permissions of /dev/fuse
+echo "Setting ownership and permissions for /dev/fuse."
+sudo chown root:fuse /dev/fuse
+sudo chmod 0660 /dev/fuse
+
+# Reload group memberships
+echo "Reloading group memberships."
+newgrp fuse <<EOF
+id
+EOF
+
+# Test access to /dev/fuse as cvmfs user
+echo "Testing access to /dev/fuse as cvmfs user."
+sudo -u cvmfs -s -- <<EOF
+if [ -r /dev/fuse ] && [ -w /dev/fuse ]; then
+    echo "cvmfs user has read and write access to /dev/fuse."
+else
+    echo "cvmfs user does not have read and write access to /dev/fuse."
+fi
+EOF
+
+# Verify the groups of cvmfs user
+echo "Verifying the groups of cvmfs user."
+sudo usermod -aG fuse cvmfs
+sudo groups cvmfs
+
+# Check the permissions of /dev/fuse
+echo "Checking the permissions of /dev/fuse."
 ls -l /dev/fuse
+
 
 
 echo "***********Basic Setup Required for wget setup***********"
 #Create a file that contains the repos, and other env variables
 FILENAME="/etc/cvmfs/default.local"
-TEXT="CVMFS_REPOSITORIES=atlas.cern.ch,atlas-condb.cern.ch,grid.cern.ch
-CVMFS_HTTP_PROXY=DIRECT
-CVMFS_CLIENT_PROFILE=single"
+TEXT="CVMFS_REPOSITORIES=sft.cern.ch,atlas.cern.ch,lhcb.cern.ch,cms.cern.ch,alice.cern.ch,geant4.cern.ch\n
+CVMFS_HTTP_PROXY=DIRECT\n
+CVMFS_CLIENT_PROFILE=single\n"
 if [ ! -f $FILENAME ]; then
-  echo $TEXT | sudo tee $FILENAME
+  echo -e $TEXT | sudo tee $FILENAME
 fi
 
 cat $FILENAME
