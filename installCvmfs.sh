@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo reboot
+
 echo "Installing with wget method"
 
 #Create a script that installs and test the installation of cvmfs
@@ -9,7 +11,7 @@ echo 'Starting cvmfs installation'
 # sudo apt-get install -y systemd 
 sudo reboot #System needs to reboot after getting this
 sudo apt-get install -y linux-headers-$(uname -r)
-sudo apt-get install -y autofs fuse
+#sudo apt-get install -y autofs fuse
 
 
 # Bypass policy-rc.d restrictions
@@ -85,16 +87,17 @@ else
     echo "/dev/fuse exists."
 fi
 
-# Change ownership and permissions of /dev/fuse
-echo "Setting ownership and permissions for /dev/fuse."
-sudo chown root:fuse /dev/fuse
-sudo chmod 0660 /dev/fuse
-
 # Reload group memberships
 echo "Reloading group memberships."
 newgrp fuse <<EOF
 id
 EOF
+
+# Change ownership and permissions of /dev/fuse
+echo "Setting ownership and permissions for /dev/fuse."
+sudo chown root:fuse /dev/fuse
+sudo chmod 0660 /dev/fuse
+
 
 # Test access to /dev/fuse as cvmfs user
 echo "Testing access to /dev/fuse as cvmfs user."
@@ -110,6 +113,18 @@ EOF
 echo "Verifying the groups of cvmfs user."
 sudo usermod -aG fuse cvmfs
 sudo groups cvmfs
+sudo reboot #Needed to make sure /dev/fuse can be accessed
+
+
+# FINAL Test access to /dev/fuse as cvmfs user
+echo "**********FINAL Testing access to /dev/fuse as cvmfs user.**********"
+sudo -u cvmfs -s -- <<EOF
+if [ -r /dev/fuse ] && [ -w /dev/fuse ]; then
+    echo "cvmfs user has read and write access to /dev/fuse."
+else
+    echo "cvmfs user does not have read and write access to /dev/fuse."
+fi
+EOF
 
 # Check the permissions of /dev/fuse
 echo "Checking the permissions of /dev/fuse."
@@ -117,17 +132,17 @@ ls -l /dev/fuse
 
 
 
+
+
 echo "***********Basic Setup Required for wget setup***********"
 #Create a file that contains the repos, and other env variables
 FILENAME="/etc/cvmfs/default.local"
-TEXT="CVMFS_REPOSITORIES=sft.cern.ch,atlas.cern.ch,lhcb.cern.ch,cms.cern.ch,alice.cern.ch,geant4.cern.ch\n
+TEXT="CVMFS_REPOSITORIES=sft.cern.ch,atlas.cern.ch\n
 CVMFS_HTTP_PROXY=DIRECT\n
 CVMFS_CLIENT_PROFILE=single\n"
 if [ ! -f $FILENAME ]; then
   echo -e $TEXT | sudo tee $FILENAME
-fi
-
-cat $FILENAME
+fi=
 
 echo "12\n4\n" | sudo cvmfs_config setup
 

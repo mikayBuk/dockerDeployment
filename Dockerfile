@@ -6,12 +6,15 @@ RUN apt-get update && apt-get install -y \
     bash \
     curl  \
     wget \
-    systemctl
+    systemctl \
+    autofs \
+    fuse
 
 
 # Copy your bash script into the container
 #COPY installDocker.sh /usr/local/bin/installDocker.sh
 COPY installCvmfs.sh /usr/local/bin/installCvmfs.sh
+
 
 # Make the bash script executable
 #RUN chmod +x /usr/local/bin/installDocker.sh
@@ -22,4 +25,4 @@ RUN chmod +x /usr/local/bin/installCvmfs.sh
 # ENV CVMFS_HTTP_PROXY=DIRECT
 
 # Set the entrypoint to run the bash script
-ENTRYPOINT ["/usr/local/bin/installCvmfs.sh"]
+#ENTRYPOINT ["/usr/local/bin/installCvmfs.sh"]
