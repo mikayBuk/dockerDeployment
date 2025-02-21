@@ -10,16 +10,16 @@ echo "Installing with wget method"
 echo 'Starting cvmfs installation'
 
 #Getting dependencies
-# sudo apt-get install -y systemd 
+#sudo apt-get install -y systemd 
 #sudo apt-get install -y linux-headers-$(uname -r)
 #sudo apt-get install -y autofs fuse
 
 
 # Bypass policy-rc.d restrictions
-echo "Bypassing policy restrictions for autofs"
-echo '#!/bin/sh' | sudo tee /usr/sbin/policy-rc.d
-echo 'exit 0' | sudo tee -a /usr/sbin/policy-rc.d
-sudo chmod +x /usr/sbin/policy-rc.d 
+# echo "Bypassing policy restrictions for autofs"
+# echo '#!/bin/sh' | sudo tee /usr/sbin/policy-rc.d
+# echo 'exit 0' | sudo tee -a /usr/sbin/policy-rc.d
+# sudo chmod +x /usr/sbin/policy-rc.d 
 
 
 #Adding CVMFS Repo
@@ -30,21 +30,23 @@ sudo apt-get -y update
 sudo apt-get -y install cvmfs autofs
 
 
+
+#COMMENTING THIS OUT MADE PROBE WORK
 # Create and configure autofs service file if missing
-if [ ! -f /etc/systemd/system/autofs.service ]; then
-  sudo tee /etc/systemd/system/autofs.service > /dev/null << EOL
-[Unit]
-Description=Automount File System
-After=network.target local-fs.target
+# if [ ! -f /etc/systemd/system/autofs.service ]; then
+#   sudo tee /etc/systemd/system/autofs.service > /dev/null << EOL
+# [Unit]
+# Description=Automount File System
+# After=network.target local-fs.target
 
-[Service]
-Type=forking
-ExecStart=/usr/sbin/automount --pid-file /var/run/autofs.pid
+# [Service]
+# Type=forking
+# ExecStart=/usr/sbin/automount --pid-file /var/run/autofs.pid
 
-[Install]
-WantedBy=multi-user.target
-EOL
-fi
+# [Install]
+# WantedBy=multi-user.target
+# EOL
+# fi
 
 
 # Reload systemd manager configuration
@@ -57,8 +59,8 @@ sudo systemctl start autofs
 # Install and load FUSE
 echo "***********Installing/Using Fuse***********"
 #sudo apt-get install -y fuse
-sudo modprobe fuse
-lsmod | grep fuse
+# sudo modprobe fuse
+# lsmod | grep fuse
 
 # Check to make sure cvmfs user exists
 if id "cvmfs" &>/dev/null; then
@@ -104,7 +106,7 @@ sudo chmod g+rw /dev/fuse
 echo "Verifying the groups of cvmfs user."
 sudo usermod -aG fuse cvmfs
 sudo groups cvmfs
-sudo reboot #Needed to make sure /dev/fuse can be accessed
+#sudo reboot #Needed to make sure /dev/fuse can be accessed
 
 
 # FINAL Test access to /dev/fuse as cvmfs user
@@ -124,11 +126,14 @@ echo "***********Basic Setup Required for wget setup***********"
 FILENAME="/etc/cvmfs/default.local"
 TEXT="CVMFS_REPOSITORIES=sft.cern.ch,atlas.cern.ch\n
 CVMFS_HTTP_PROXY=DIRECT\n
-CVMFS_CLIENT_PROFILE=single\n"
+CVMFS_CLIENT_PROFILE=single\n
+CVMFS_LOGFILE=/var/log/cvmfs.log\n
+CVMFS_USE_LOGFILE=yes\n"
 if [ ! -f $FILENAME ]; then
   echo -e $TEXT | sudo tee $FILENAME
 fi
 
+echo "********Running cvmfs_config setup*********"
 echo "12\n4\n" | sudo cvmfs_config setup
 
 #Restarting autofs 

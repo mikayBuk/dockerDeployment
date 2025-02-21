@@ -28,4 +28,4 @@ RUN chmod +x /usr/local/bin/installCvmfs.sh
 # ENV CVMFS_HTTP_PROXY=DIRECT
 
 # Set the entrypoint to run the bash script
-#ENTRYPOINT ["/usr/local/bin/installCvmfs.sh"]
+ENTRYPOINT ["/usr/local/bin/installCvmfs.sh"]

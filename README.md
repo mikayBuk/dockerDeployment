@@ -7,7 +7,7 @@ There are two bash scripts: installCvmfs.sh and installDocker.sh.
 
 installCvmfs.sh installs cvmfs in the docker container. It obtains the pre-reqs (wget, sudo) before 
 setting up cvmfs. Follows the instructions on the page for debuntu setups (https://cvmfs.readthedocs.io/en/stable/cpt-quickstart.html).
-It installs cvmfs using the wget method. Right now, fuse is not working. Need to determine why.
+It installs cvmfs using the wget method. Right now, Geo-API is not working. Need to figure out why (maybe need a proxy server?)
 
 /dev/fuse can be read only if the container runs in priveleged mode
 autofs works if in priveleged mode
