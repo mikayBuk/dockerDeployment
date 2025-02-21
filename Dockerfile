@@ -20,6 +20,9 @@ COPY installCvmfs.sh /usr/local/bin/installCvmfs.sh
 #RUN chmod +x /usr/local/bin/installDocker.sh
 RUN chmod +x /usr/local/bin/installCvmfs.sh
 
+#Make the installation into a command
+
+
 
 # ENV CVMFS_REPOSITORIES=sft.cern.ch,atlas.cern.ch,lhcb.cern.ch,cms.cern.ch,alice.cern.ch,geant4.cern.ch 
 # ENV CVMFS_HTTP_PROXY=DIRECT

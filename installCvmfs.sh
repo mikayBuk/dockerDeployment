@@ -1,6 +1,8 @@
 #!/bin/bash
 
-sudo reboot
+
+#Exit the script whenever there is an error encountered
+#set -e
 
 echo "Installing with wget method"
 
@@ -9,8 +11,7 @@ echo 'Starting cvmfs installation'
 
 #Getting dependencies
 # sudo apt-get install -y systemd 
-sudo reboot #System needs to reboot after getting this
-sudo apt-get install -y linux-headers-$(uname -r)
+#sudo apt-get install -y linux-headers-$(uname -r)
 #sudo apt-get install -y autofs fuse
 
 
@@ -26,7 +27,7 @@ wget https://cvmrepo.s3.cern.ch/cvmrepo/apt/cvmfs-release-latest_all.deb
 sudo dpkg -i cvmfs-release-latest_all.deb
 rm -f cvmfs-release-latest_all.deb
 sudo apt-get -y update
-sudo apt-get -y install cvmfs
+sudo apt-get -y install cvmfs autofs
 
 
 # Create and configure autofs service file if missing
@@ -96,18 +97,8 @@ EOF
 # Change ownership and permissions of /dev/fuse
 echo "Setting ownership and permissions for /dev/fuse."
 sudo chown root:fuse /dev/fuse
-sudo chmod 0660 /dev/fuse
-
-
-# Test access to /dev/fuse as cvmfs user
-echo "Testing access to /dev/fuse as cvmfs user."
-sudo -u cvmfs -s -- <<EOF
-if [ -r /dev/fuse ] && [ -w /dev/fuse ]; then
-    echo "cvmfs user has read and write access to /dev/fuse."
-else
-    echo "cvmfs user does not have read and write access to /dev/fuse."
-fi
-EOF
+sudo chmod u+rw /dev/fuse
+sudo chmod g+rw /dev/fuse
 
 # Verify the groups of cvmfs user
 echo "Verifying the groups of cvmfs user."
@@ -118,20 +109,14 @@ sudo reboot #Needed to make sure /dev/fuse can be accessed
 
 # FINAL Test access to /dev/fuse as cvmfs user
 echo "**********FINAL Testing access to /dev/fuse as cvmfs user.**********"
-sudo -u cvmfs -s -- <<EOF
-if [ -r /dev/fuse ] && [ -w /dev/fuse ]; then
-    echo "cvmfs user has read and write access to /dev/fuse."
-else
-    echo "cvmfs user does not have read and write access to /dev/fuse."
-fi
-EOF
+
+#Swtich to cvmfs
+echo "Opening as cvmfs user"
+sudo -u cvmfs test -w /dev/fuse -a -r /dev/fuse  && echo "User can read and write to the file" || echo "User cannot read/write to the file"
 
 # Check the permissions of /dev/fuse
 echo "Checking the permissions of /dev/fuse."
 ls -l /dev/fuse
-
-
-
 
 
 echo "***********Basic Setup Required for wget setup***********"
@@ -142,7 +127,7 @@ CVMFS_HTTP_PROXY=DIRECT\n
 CVMFS_CLIENT_PROFILE=single\n"
 if [ ! -f $FILENAME ]; then
   echo -e $TEXT | sudo tee $FILENAME
-fi=
+fi
 
 echo "12\n4\n" | sudo cvmfs_config setup
 
@@ -169,10 +154,8 @@ fi
 echo "Verification process complete"
 
 
-
-
-sudo cvmfs_config chksetup
-
-
 #Finished with cvmfs installation
 echo '****Finished cvmfs installation*****'
+
+echo "Checking Setup of cvmfs"
+sudo cvmfs_config chksetup
