@@ -3,6 +3,8 @@ FROM ubuntu:20.04
 # Install necessary packages (if any)
 RUN apt-get update && apt-get install -y \
     sudo\
+    util-linux \
+    vim \
     bash \
     curl  \
     wget \

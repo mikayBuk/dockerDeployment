@@ -9,8 +9,12 @@ installCvmfs.sh installs cvmfs in the docker container. It obtains the pre-reqs 
 setting up cvmfs. Follows the instructions on the page for debuntu setups (https://cvmfs.readthedocs.io/en/stable/cpt-quickstart.html).
 It installs cvmfs using the wget method. Right now, Geo-API is not working. Need to figure out why (maybe need a proxy server?)
 
+
+To prevent priveledged mode from being overused/misused, user is immediately switched from root to cvmfs after unlocking.
+
 Questions: 
 Should I run this in priveledged mode? --> Yes Continue, No, figure out another way
+Should I keep them as root or switch to cvmfs user or something else?
 Why is GEO-API not working? Ideas: Proxy-server
 
 

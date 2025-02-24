@@ -164,3 +164,12 @@ echo '****Finished cvmfs installation*****'
 
 echo "Checking Setup of cvmfs"
 sudo cvmfs_config chksetup
+
+# sudo su cvmfs
+# whoami 
+
+
+echo "Switching from root to cvmfs user"
+sudo passwd -u cvmfs
+sudo usermod -s /bin/bash cvmfs
+sudo su cvmfs
